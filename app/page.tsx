@@ -15,12 +15,8 @@ export default function Home() {
           <a href="#" className="hover:text-teal-700 transition-colors">Community</a>
         </div>
         <div className="flex items-center gap-3">
-          <button className="text-sm text-gray-600 hover:text-teal-700 transition-colors">
-            Sign In
-          </button>
-          <button className="text-sm bg-teal-700 text-white px-4 py-2 rounded-full hover:bg-teal-800 transition-colors">
-            Get Started
-          </button>
+          <a href="/signin" className="text-sm text-gray-600 hover:text-teal-700 transition-colors">Sign In</a>
+          <a href="/signup" className="text-sm bg-teal-700 text-white px-4 py-2 rounded-full hover:bg-teal-800 transition-colors">Get Started</a>
         </div>
       </nav>
 
@@ -36,12 +32,8 @@ export default function Home() {
           and readers read — no gatekeeping, no algorithms, no paywalls. Ever.
         </p>
         <div className="flex gap-4">
-          <button className="bg-teal-700 text-white px-8 py-3 rounded-full text-base font-medium hover:bg-teal-800 transition-colors">
-            Start Reading
-          </button>
-          <button className="border border-teal-700 text-teal-700 px-8 py-3 rounded-full text-base font-medium hover:bg-teal-50 transition-colors">
-            Publish Your Book
-          </button>
+          <a href="/books" className="bg-teal-700 text-white px-8 py-3 rounded-full text-base font-medium hover:bg-teal-800 transition-colors">Start Reading</a>
+          <a href="/signup" className="border border-teal-700 text-teal-700 px-8 py-3 rounded-full text-base font-medium hover:bg-teal-50 transition-colors">Publish Your Book</a>
         </div>
       </section>
 
@@ -85,9 +77,7 @@ export default function Home() {
           Join IAM Press and publish your book for free today.
           Your readers are waiting.
         </p>
-        <button className="bg-white text-teal-700 px-8 py-3 rounded-full font-medium hover:bg-teal-50 transition-colors">
-          Start Publishing
-        </button>
+        <a href="/signup" className="bg-white text-teal-700 px-8 py-3 rounded-full font-medium hover:bg-teal-50 transition-colors">Start Publishing</a>
       </section>
 
       {/* Footer */}
