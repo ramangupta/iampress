@@ -15,6 +15,19 @@ export default function Dashboard() {
     loadDashboard();
   }, []);
 
+  const handleDeleteBook = async (bookId: string) => {
+    if (!confirm("Are you sure you want to delete this book?")) return;
+
+    // Delete chapters first
+    await supabase.from("chapters").delete().eq("book_id", bookId);
+
+    // Then delete the book
+    await supabase.from("books").delete().eq("id", bookId);
+
+    // Refresh the list
+    setBooks(books.filter((b) => b.id !== bookId));
+  };
+  
   const loadDashboard = async () => {
     // Get logged in user
     const { data: { user } } = await supabase.auth.getUser();
@@ -81,6 +94,8 @@ export default function Dashboard() {
           <span className="text-xl">♾️</span>
         </div>
         <div className="flex items-center gap-4">
+          <a href="/books" className="text-sm text-gray-500 hover:text-teal-700 transition-colors">Bookstore</a>
+          <a href="/" className="text-sm text-gray-500 hover:text-teal-700 transition-colors">Home</a>
           <span className="text-sm text-gray-600">
             Welcome, <span className="font-medium text-gray-900">{profile?.name}</span>
           </span>
@@ -138,15 +153,23 @@ export default function Dashboard() {
                       <p className="font-medium text-gray-900">{book.title}</p>
                       <p className="text-sm text-gray-500 mt-0.5">{book.genre}</p>
                     </div>
-                    <span
-                      className={`text-xs px-3 py-1 rounded-full font-medium ${
-                        book.status === "published"
-                          ? "bg-teal-50 text-teal-700"
-                          : "bg-gray-100 text-gray-500"
-                      }`}
-                    >
-                      {book.status}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`text-xs px-3 py-1 rounded-full font-medium ${
+                          book.status === "published"
+                            ? "bg-teal-50 text-teal-700"
+                            : "bg-gray-100 text-gray-500"
+                        }`}
+                      >
+                        {book.status}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteBook(book.id)}
+                        className="text-xs text-red-400 hover:text-red-600 transition-colors px-3 py-1 rounded-full hover:bg-red-50"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

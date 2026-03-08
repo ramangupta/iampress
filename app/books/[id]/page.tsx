@@ -152,9 +152,12 @@ export default function BookReader({ params }: { params: Promise<{ id: string }>
               </div>
 
               {/* Chapter Content */}
-              <div className={`${text} text-base leading-8 whitespace-pre-wrap`}>
-                {chapters[activeChapter]?.content}
-              </div>
+              <div
+                className={`${text} text-base leading-8 max-w-none reader-content
+                  ${darkMode ? "dark-reader" : "light-reader"}
+                `}
+                dangerouslySetInnerHTML={{ __html: chapters[activeChapter]?.content || "" }}
+              />
 
               {/* Chapter Navigation */}
               <div className="flex justify-between mt-16 pt-8 border-t border-inherit">

@@ -53,11 +53,15 @@ export default function NewBook() {
       let extractedText = "";
 
       if (file.name.endsWith(".docx")) {
-        // Parse Word document
-        const mammoth = await import("mammoth");
-        const arrayBuffer = await file.arrayBuffer();
-        const result = await mammoth.extractRawText({ arrayBuffer });
-        extractedText = result.value;
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch('/api/parse-docx', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        extractedText = JSON.stringify(data.sections);
       } else if (file.name.endsWith(".pdf")) {
         // Parse PDF
         const pdfjsLib = await import("pdfjs-dist");
@@ -76,7 +80,12 @@ export default function NewBook() {
       }
 
       // Split into chapters by detecting headings
-      const parsedChapters = parseChapters(extractedText);
+      let parsedChapters;
+      if (file.name.endsWith(".docx")) {
+        parsedChapters = JSON.parse(extractedText);
+      } else {
+        parsedChapters = parseChapters(extractedText);
+      }
       setChapters(parsedChapters);
       setStep(3);
     } catch (err) {
@@ -86,39 +95,39 @@ export default function NewBook() {
     setParsing(false);
   };
 
-  // Parse text into chapters
-  const parseChapters = (text: string) => {
-    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+  const parseChapters = (html: string) => {
     const chapterList: { title: string; content: string }[] = [];
-    let currentTitle = "Introduction";
-    let currentContent: string[] = [];
+    let currentTitle = "";
+    let currentContent = "";
 
-    const isHeading = (line: string) => {
-      return (
-        /^chapter\s+\d+/i.test(line) ||
-        /^part\s+\d+/i.test(line) ||
-        /^\d+\.\s+[A-Z]/.test(line) ||
-        (line.length < 60 && line === line.toUpperCase() && line.length > 3)
-      );
-    };
+    // Split by h1 and h2 tags
+    const parts = html.split(/(<h[12][^>]*>.*?<\/h[12]>)/gi);
 
-    lines.forEach((line) => {
-      if (isHeading(line)) {
-        if (currentContent.length > 0) {
-          chapterList.push({ title: currentTitle, content: currentContent.join("\n") });
+    parts.forEach((part) => {
+      const h1Match = part.match(/^<h1[^>]*>(.*?)<\/h1>$/i);
+      const h2Match = part.match(/^<h2[^>]*>(.*?)<\/h2>$/i);
+
+      if (h1Match || h2Match) {
+        // Save previous chapter
+        if (currentTitle && currentContent.trim()) {
+          chapterList.push({ title: currentTitle, content: currentContent });
         }
-        currentTitle = line;
-        currentContent = [];
+        // Start new chapter
+        currentTitle = (h1Match || h2Match)![1].replace(/<[^>]*>/g, "").trim();
+        currentContent = "";
       } else {
-        currentContent.push(line);
+        currentContent += part;
       }
     });
 
-    if (currentContent.length > 0) {
-      chapterList.push({ title: currentTitle, content: currentContent.join("\n") });
+    // Save last chapter
+    if (currentTitle && currentContent.trim()) {
+      chapterList.push({ title: currentTitle, content: currentContent });
     }
 
-    return chapterList.length > 0 ? chapterList : [{ title: "Full Content", content: text }];
+    return chapterList.length > 0
+      ? chapterList
+      : [{ title: "Full Content", content: html }];
   };
 
   // Publish the book

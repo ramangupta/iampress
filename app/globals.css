@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #ffffff;
@@ -23,4 +24,106 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* IAM Press Book Reader Styles */
+
+.reader-content p {
+  margin-bottom: 1.25rem;
+  line-height: 1.9;
+}
+
+.reader-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #0d9488;
+}
+
+.reader-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.reader-content h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.reader-content h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Code blocks */
+.reader-content pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: 1.5rem 0;
+  border-left: 4px solid #0d9488;
+}
+
+/* Key Concept boxes */
+.reader-content blockquote {
+  background: #f0fdfa;
+  border-left: 4px solid #0d9488;
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  color: #134e4a;
+  font-style: normal;
+}
+
+/* Lists */
+.reader-content li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  line-height: 1.8;
+}
+
+.reader-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.reader-content ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+/* Dark mode overrides */
+.dark-reader h3 {
+  border-bottom-color: #0d9488;
+  color: #e2e8f0;
+}
+
+.dark-reader blockquote {
+  background: #134e4a;
+  color: #ccfbf1;
+  border-left-color: #0d9488;
+}
+
+.dark-reader pre {
+  background: #020617;
+  border-left-color: #0d9488;
+}
+
+.dark-reader li {
+  color: #e2e8f0;
 }
